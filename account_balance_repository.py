@@ -30,6 +30,7 @@ def add_balance_detail(account_number, currency, available_balance, cleared_bala
             balance.currency, balance.available_balance, balance.cleared_balance,
             balance.unclear_balance, balance.hold_balance, balance.minimum_balance, get_todays_date(), ))
             connection.commit()
+            # connection.close()
             return "Balance log Created"
         else:
             return "Invalid Operation!"
@@ -39,6 +40,7 @@ def add_balance_detail(account_number, currency, available_balance, cleared_bala
 def get_account_balance_details(account_number):
     if (check_if_customer_exists(account_number) == True):
         try:
+            connection = create_connection()
             query = ''' SELECT id, currency, availableBalance, clearedBalance,
             unclearBalance, holdBalance, minimumBalance FROM customer_balance WHERE accountNumber=?'''
             execute_query = cursor.execute(query, (account_number, )).fetchone()
@@ -57,6 +59,7 @@ def get_account_balance_details(account_number):
 
 def get_balance_id(account_number):
     try:
+        connection = create_connection()
         if check_if_customer_exists(account_number):
             query = ''' SELECT id FROM customer_balance WHERE accountNumber=?'''
             execute_query = cursor.execute(query, (balance_id, )).fetchone()
@@ -69,13 +72,17 @@ def get_balance_id(account_number):
 
 def update_account_balance(account_number, new_balance):
     try:
+        connection = create_connection()
         query = ''' UPDATE customer_balance SET availableBalance=? WHERE accountNumber=?'''
         execute_query = cursor.execute(query, (new_balance, account_number,)).fetchone()
+        connection.commit()
+        connection.close()
     except Exception as exception:
         return exception
 
 def get_account_number(balance_id):
     try:
+        connection = create_connection()
         query = ''' SELECT accountNumber FROM customer_balance WHERE id=?'''
         execute_query = cursor.execute(query, (balance_id, )).fetchone()
         return execute_query
@@ -91,4 +98,4 @@ def get_todays_date():
     return date_string
 
 def create_dummy_balance_for_account():
-    print(add_balance_detail("0705809845", "NGN", 500, 500, 0, 0, 0))
+    print(add_balance_detail("0705809845", "NGN", 500, 0, 0, 0, 0))

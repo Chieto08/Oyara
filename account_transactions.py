@@ -50,39 +50,49 @@ class AccountTransactions:
 
     def debit_account(self, amount, account, account_balance):
         if (len(self.account_number) == 10 and self.account_number == account["account_number"]):
-            if (account["status"] == "active"):
-                if (self.currency == account["currency"]):
-                    if (self.debit_or_credit == "Dr"):
-                        if ((int(account_balance["available_balance"] - account_balance["minimum_balance"]) > int(amount)) or
-                        (int(account_balance["available_balance"] - account_balance["minimum_balance"]) == int(amount))):
-                            account_balance["available_balance"] = int(account_balance["available_balance"])
-                            account_balance["available_balance"] -= int(amount)
+            if int(amount) > 0:
+                if (account["status"] == "active"):
+                    if (self.currency == account["currency"]):
+                        if (self.debit_or_credit == "Dr"):
+                            if ((int(account_balance["available_balance"] - account_balance["minimum_balance"]) > int(amount)) or (int(account_balance["available_balance"] - account_balance["minimum_balance"]) == int(amount))):
+                                account_balance["available_balance"] = int(account_balance["available_balance"])
+                                account_balance["available_balance"] -= int(amount)
+                                return "Success"
+                            else:
+                                return "Insufficient Funds"
                         else:
-                            return "Insufficient Funds"
+                            return "Invalid Operation"
                     else:
-                        return "Invalid Operation"
+                        return "Invalid Currency"
                 else:
-                    return "Invalid Currency"
+                    return "Account not operational"
             else:
-                return "Invalid Operation"
+                return "Invalid amount provided for transaction"
+        else:
+            return "Account does not exist!"
 
     def credit_account(self, amount, account, account_balance):
         if (len(self.account_number) == 10 and self.account_number == account["account_number"]):
-            if (account["status"] == "active"):
-                if (self.currency == account["currency"]):
-                    if (self.debit_or_credit == "Cr"):
-                        account_balance["available_balance"] = int(account_balance["available_balance"])
-                        account_balance["available_balance"] += int(amount)
+            if int(amount) > 0:
+                if (account["status"] == "active"):
+                    if (self.currency == account["currency"]):
+                        if (self.debit_or_credit == "Cr"):
+                            account_balance["available_balance"] = int(account_balance["available_balance"])
+                            account_balance["available_balance"] += int(amount)
+                            return "Success"
+                        else:
+                            return "Invalid Operation"
                     else:
-                        return "Invalid Operation"
+                        return "Invalid Currency"
                 else:
-                    return "Invalid Currency"
+                    return "Account not suitable for operation"
             else:
-                return "Account not suitable for operation"
+                return "Invalid amount provided for transaction"
         else:
-                return "Invalid Operation"
+            return "Invalid Operation"
 
     def freeze_account(self, account):
         if (len(self.account_number) == 10 and self.account_number == account["account_number"]):
             account["status"] = "inactive"
+            return "Success"
 

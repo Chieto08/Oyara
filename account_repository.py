@@ -34,7 +34,7 @@ def add_customer(account_number, account_name, currency,
             user_account.account_type, user_account.bvn, user_account.full_name, 
             user_account.phone_number, user_account.email, user_account.status, get_todays_date(), ))
             connection.commit()
-            connection.close()
+            # connection.close()
             return "Account Created"
         else:
             return "Error"
@@ -108,4 +108,4 @@ def create_dummy_account():
     print(add_customer("0705809845", "Test", "NGN", get_todays_date(), get_todays_date(), "Savings",
     "459459805927438578578559", "Test TestUser", "active", "09052869373", "mail@mail.com"))
 
-print(get_account_details("0705809845"))
+# print(get_account_details("0705809845"))

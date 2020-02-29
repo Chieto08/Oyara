@@ -8,11 +8,13 @@ cursor = connection.cursor()
 
 
 
-def update_account_status(account_number):
+def update_account_status(account_number, status):
     try:
-        query = ''' UPDATE customer_details SET status=inactive WHERE accountNumber=?'''
-        execute_query = cursor.execute(query, (account_number,)).fetchone()
+        query = ''' UPDATE customer_details SET status=? WHERE accountNumber=?'''
+        execute_query = cursor.execute(query, (status, account_number, )).fetchone()
+        connection.commit()
+        return execute_query
     except Exception as exception:
      return exception
 
-update_account_status("0705809845")
+# print(update_account_status("0705809845", "inactive"))
